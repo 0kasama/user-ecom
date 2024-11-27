@@ -35,8 +35,10 @@ export default function ProductCard() {
               <Image
                 src={product.image}
                 fill
+                sizes='(max-width: 640px) 90vw, (max-width: 768px) 80vw, (max-width: 1024px) 70vw, (max-width: 1200px) 50vw, 33vw'
                 alt={product.name}
                 className='object-contain'
+                priority
               />
             </figure>
           </Link>
