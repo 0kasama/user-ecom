@@ -5,6 +5,13 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  theme: {
+    extend: {
+      gridTemplateColumns: {
+        '30/70': '30% 70%',
+      },
+    },
+  },
   plugins: [require('daisyui')],
   daisyui: {
     themes: ['pastel'],
