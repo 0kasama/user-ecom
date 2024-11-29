@@ -3,11 +3,7 @@ import axios from 'axios';
 
 export const login = async (params) => {
   try {
-    const response = await axios({
-      method: 'POST',
-      url: `${API_URL}/auth/login`,
-      data: params,
-    });
+    const response = await axios.post(`${API_URL}/auth/login`, params);
     return response.data;
   } catch (error) {
     console.error('Login unsuccessful:', error);
@@ -17,11 +13,7 @@ export const login = async (params) => {
 
 export const register = async (params) => {
   try {
-    const response = await axios({
-      method: 'POST',
-      url: `${API_URL}/auth/register`,
-      data: params,
-    });
+    const response = await axios.post(`${API_URL}/auth/register`, params);
     return response.data;
   } catch (error) {
     console.error('Register unsuccessful:', error);
