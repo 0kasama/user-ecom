@@ -3,9 +3,9 @@ export default function Toast({ message, type }) {
     type === 'success' ? 'alert alert-success' : 'alert alert-error';
 
   return (
-    <div className='mt-10 toast toast-top toast-center'>
+    <div className='mt-20 toast toast-top toast-center'>
       <div className={alertType}>
-        <span>{message}</span>
+        <span className='text-white'>{message}</span>
       </div>
     </div>
   );
