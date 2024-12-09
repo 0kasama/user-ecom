@@ -1,5 +1,5 @@
 import './globals.css';
-import { Poppins } from 'next/font/google';
+import localFont from 'next/font/local';
 import { AuthProvider } from '@/lib/context/authContext';
 import Navbar from '@/components/Navbar';
 
@@ -8,7 +8,9 @@ export const metadata = {
   description: 'E-Commerce',
 };
 
-const poppins = Poppins({ subsets: ['latin'], weight: '400' });
+const poppins = localFont({
+  src: './font/Poppins.ttf',
+});
 
 export default function RootLayout({ children }) {
   return (
