@@ -20,6 +20,10 @@ input[type='number']::-webkit-outer-spin-button {
   @apply flex flex-col max-w-md mx-auto my-20 py-10 justify-center items-center gap-5 bg-base-200 rounded-2xl shadow-xl;
 }
 
+.address-form {
+  @apply flex flex-col max-w-md mx-auto my-20 py-10 justify-center items-center gap-5 bg-base-200 rounded-2xl shadow-xl;
+}
+
 .select-neutral {
   @apply border-neutral;
 }

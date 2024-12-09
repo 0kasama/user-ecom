@@ -76,7 +76,10 @@ export default function NewAddressForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className='auth-form'>
+    <form onSubmit={handleSubmit} className='address-form'>
+      <h1 className='text-2xl underline font-bold'>
+        New Address
+      </h1>
       <label className='form-control w-full max-w-xs'>
         <div className='label'>
           <span className='label-text font-medium'>Address Title</span>

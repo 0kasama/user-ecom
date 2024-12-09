@@ -13,7 +13,8 @@ export default function ProfileAddress() {
   const fetchAddresses = async () => {
     try {
       const response = await findAllAddresses();
-      setAddresses(response);
+      const sortedAddresses = response.sort((a, b) => a.id - b.id);
+      setAddresses(sortedAddresses);
     } catch (error) {
       throw error;
     }
