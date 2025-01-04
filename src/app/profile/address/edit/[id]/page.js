@@ -1,9 +1,9 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import EditAddressForm from '@/components/EditAddressForm';
+import AddressForm from '@/components/AddressForm';
 
 export default function EditAddressPage() {
   const params = useParams();
-  return <EditAddressForm addressId={params.id} />;
+  return <AddressForm addressId={params.id} />;
 }

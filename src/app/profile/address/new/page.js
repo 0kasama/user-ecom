@@ -1,5 +1,5 @@
-import NewAddressForm from '@/components/NewAddressForm';
+import AddressForm from '@/components/AddressForm';
 
 export default function NewAddressPage() {
-  return <NewAddressForm />;
+  return <AddressForm />;
 }

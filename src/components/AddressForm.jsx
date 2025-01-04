@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 import { findProvinces, findCityByProvince } from '@/lib/api/city';
-import { findAddress, updateAddress } from '@/lib/api/address';
+import { createAddress, updateAddress, findAddress } from '@/lib/api/address';
 import { useRouter } from 'next/navigation';
 import Toast from './ToastMessage';
 
-export default function EditAddressForm({ addressId }) {
+export default function AddressForm({ addressId }) {
   const router = useRouter();
   const [provinces, setProvinces] = useState([]);
   const [cities, setCities] = useState([]);
@@ -16,13 +16,14 @@ export default function EditAddressForm({ addressId }) {
   const [city, setCity] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(false);
+  const isEditMode = Boolean(addressId);
 
   const fetchProvinces = async () => {
     try {
       const response = await findProvinces();
       setProvinces(response);
     } catch (error) {
-      throw error;
+      console.error('Error fetching provinces:', error);
     }
   };
 
@@ -31,7 +32,7 @@ export default function EditAddressForm({ addressId }) {
   }, []);
 
   useEffect(() => {
-    if (addressId) {
+    if (isEditMode) {
       const fetchAddress = async () => {
         try {
           const response = await findAddress(addressId);
@@ -45,12 +46,16 @@ export default function EditAddressForm({ addressId }) {
           setCity(response.city.id);
         } catch (error) {
           console.error('Failed to fetch address:', error);
+          setError(true);
+          setTimeout(() => {
+            setError(false);
+          }, 3000);
         }
       };
 
       fetchAddress();
     }
-  }, [addressId]);
+  }, [addressId, isEditMode]);
 
   const handleProvinceChange = async (e) => {
     const provinceId = e.target.value;
@@ -80,27 +85,35 @@ export default function EditAddressForm({ addressId }) {
         street_address: streetName,
         city_id: +city,
       };
-      console.log(params, 'update data');
 
-      const response = await updateAddress(+addressId, params);
+      if (isEditMode) {
+        await updateAddress(+addressId, params);
+      } else {
+        await createAddress(params);
+      }
+
       setSuccess(true);
       setTimeout(() => {
         router.push('/profile');
       }, 1000);
-      return response.data;
     } catch (error) {
-      console.error('Failed Update Address:', error);
+      console.error(
+        `Failed to ${isEditMode ? 'update' : 'create'} address:`,
+        error
+      );
       setError(true);
       setTimeout(() => {
         setError(false);
       }, 3000);
-      throw error;
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className='address-form'>
-      <h1 className='text-2xl underline font-bold'>Edit Address</h1>
+      <h1 className='text-2xl underline font-bold'>
+        {isEditMode ? 'Edit Address' : 'New Address'}
+      </h1>
+
       <label className='form-control w-full max-w-xs'>
         <div className='label'>
           <span className='label-text font-medium'>Address Title</span>
@@ -141,10 +154,11 @@ export default function EditAddressForm({ addressId }) {
         <select
           className='select select-bordered select-neutral w-full max-w-xs'
           disabled={!selectedProvince}
+          value={city}
           onChange={(e) => setCity(e.target.value)}
           required
         >
-          <option disabled>
+          <option value=''>
             {selectedProvince ? 'Select City' : 'Select Province First'}
           </option>
           {cities.map((city) => (
@@ -170,12 +184,20 @@ export default function EditAddressForm({ addressId }) {
       </label>
 
       <button type='submit' className='btn btn-neutral w-full max-w-xs'>
-        Create Address
+        {isEditMode ? 'Update Address' : 'Create Address'}
       </button>
 
-      {error && <Toast message='Failed to update address' type='error' />}
+      {error && (
+        <Toast
+          message={`Failed to ${isEditMode ? 'update' : 'add'} address`}
+          type='error'
+        />
+      )}
       {success && (
-        <Toast message='Address updated successfully' type='success' />
+        <Toast
+          message={`Address ${isEditMode ? 'updated' : 'added'} successfully`}
+          type='success'
+        />
       )}
     </form>
   );
