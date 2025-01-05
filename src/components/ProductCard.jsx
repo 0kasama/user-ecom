@@ -4,24 +4,32 @@ import { getAllProducts } from '@/lib/api/product';
 import { useState, useEffect } from 'react';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
 import { Heart } from 'lucide-react';
+import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 import Image from 'next/image';
 
 export default function ProductCard() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchProducts = async () => {
+    try {
+      setIsLoading(true);
+      const productsData = await getAllProducts();
+      setProducts(productsData.result.data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const productsData = await getAllProducts();
-        setProducts(productsData.result.data);
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      }
-    };
-
     fetchProducts();
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className='m-10 gap-5 flex flex-wrap justify-center items-center'>
