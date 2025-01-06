@@ -13,7 +13,7 @@ export default function ProfileCard() {
   const router = useRouter();
   const { isAuthenticated, logout } = useAuth();
   const [user, setUser] = useState('');
-  const [activeTab, setActiveTab] = useState('setting');
+  const [activeTab, setActiveTab] = useState('orders');
   const [loading, setLoading] = useState(true);
 
   const fetchUser = async () => {
