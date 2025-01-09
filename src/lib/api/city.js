@@ -2,7 +2,7 @@ import { API_URL } from '../utils/apiUrl';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-export const findProvinces = async () => {
+export const getProvinces = async () => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;
@@ -21,7 +21,7 @@ export const findProvinces = async () => {
   }
 };
 
-export const findAllCities = async () => {
+export const getAllCities = async () => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;
@@ -40,7 +40,7 @@ export const findAllCities = async () => {
   }
 };
 
-export const findCityByProvince = async (province_id) => {
+export const getCityByProvince = async (province_id) => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;

@@ -1,6 +1,6 @@
 'use client';
 
-import { findAllAddresses, deleteAddress } from '@/lib/api/address';
+import { getAllAddresses, deleteAddress } from '@/lib/api/address';
 import { useState, useEffect } from 'react';
 import Toast from '../ToastMessage';
 import Link from 'next/link';
@@ -12,7 +12,7 @@ export default function ProfileAddress() {
 
   const fetchAddresses = async () => {
     try {
-      const response = await findAllAddresses();
+      const response = await getAllAddresses();
       const sortedAddresses = response.sort((a, b) => a.id - b.id);
       setAddresses(sortedAddresses);
     } catch (error) {

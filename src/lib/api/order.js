@@ -2,7 +2,7 @@ import { API_URL } from '../utils/apiUrl';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-export const findAllOrders = async () => {
+export const getAllOrders = async () => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;
@@ -21,7 +21,7 @@ export const findAllOrders = async () => {
   }
 };
 
-export const findOrder = async (id) => {
+export const getOrder = async (id) => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;

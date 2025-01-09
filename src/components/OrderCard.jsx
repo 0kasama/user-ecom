@@ -1,6 +1,6 @@
 'use client';
 
-import { findAllOrders } from '@/lib/api/order';
+import { getAllOrders } from '@/lib/api/order';
 import { useState, useEffect } from 'react';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
 import Image from 'next/image';
@@ -11,7 +11,7 @@ export default function OrderCard() {
 
   const fetchOrders = async () => {
     try {
-      const response = await findAllOrders();
+      const response = await getAllOrders();
       setOrders(response);
     } catch (error) {
       console.error('Failed to fetch orders:', error);

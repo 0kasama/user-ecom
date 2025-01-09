@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { findProvinces, findCityByProvince } from '@/lib/api/city';
-import { createAddress, updateAddress, findAddress } from '@/lib/api/address';
+import { getProvinces, getCityByProvince } from '@/lib/api/city';
+import { createAddress, updateAddress, getAddress } from '@/lib/api/address';
 import { useRouter } from 'next/navigation';
 import Toast from './ToastMessage';
 
@@ -20,7 +20,7 @@ export default function AddressForm({ addressId }) {
 
   const fetchProvinces = async () => {
     try {
-      const response = await findProvinces();
+      const response = await getProvinces();
       setProvinces(response);
     } catch (error) {
       console.error('Error fetching provinces:', error);
@@ -35,11 +35,11 @@ export default function AddressForm({ addressId }) {
     if (isEditMode) {
       const fetchAddress = async () => {
         try {
-          const response = await findAddress(addressId);
+          const response = await getAddress(addressId);
           setTitle(response.title);
           setStreetName(response.street_address);
           setSelectedProvince(response.city.province_id);
-          const citiesResponse = await findCityByProvince(
+          const citiesResponse = await getCityByProvince(
             response.city.province_id
           );
           setCities(citiesResponse);
@@ -62,7 +62,7 @@ export default function AddressForm({ addressId }) {
     setSelectedProvince(provinceId);
 
     try {
-      const response = await findCityByProvince(provinceId);
+      const response = await getCityByProvince(provinceId);
       setCities(response);
 
       if (response.length > 0) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { findUser } from '@/lib/api/user';
+import { getUser } from '@/lib/api/user';
 import { useAuth } from '@/lib/context/authContext';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ export default function ProfileCard() {
 
   const fetchUser = async () => {
     try {
-      const user = await findUser();
+      const user = await getUser();
       if (user) {
         setUser(user);
       } else {

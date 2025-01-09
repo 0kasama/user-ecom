@@ -2,7 +2,7 @@ import { API_URL } from '../utils/apiUrl';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 
-export const findAllAddresses = async () => {
+export const getAllAddresses = async () => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;
@@ -21,7 +21,7 @@ export const findAllAddresses = async () => {
   }
 };
 
-export const findAddress = async (id) => {
+export const getAddress = async (id) => {
   const accessToken = Cookies.get('accessToken');
   if (!accessToken) {
     throw error;
