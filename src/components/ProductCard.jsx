@@ -1,31 +1,46 @@
 'use client';
 
 import { getAllProducts } from '@/lib/api/product';
+import { getAllWishlists } from '@/lib/api/wishlist';
 import { useState, useEffect } from 'react';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
 import { Heart } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useAuth } from '@/lib/context/authContext';
 
 export default function ProductCard() {
+  const { isAuthenticated } = useAuth();
   const [products, setProducts] = useState([]);
+  const [wishlists, setWishlists] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const fetchProducts = async () => {
+  const fetchData = async () => {
     try {
       setIsLoading(true);
       const productsData = await getAllProducts();
       setProducts(productsData.result.data);
+
+      if (isAuthenticated) {
+        const wishlistsData = await getAllWishlists();
+        setWishlists(wishlistsData.data.data);
+      }
     } catch (error) {
-      console.error('Error fetching products:', error);
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchProducts();
-    setIsLoading(false);
-  }, []);
+    fetchData();
+  }, [isAuthenticated]);
+
+  const isProductWishlisted = (productId) => {
+    if (!isAuthenticated) return false;
+    return wishlists.some((wishlist) => wishlist.product.id === productId);
+  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -57,9 +72,17 @@ export default function ProductCard() {
               <p className='text-lg font-medium'>
                 {convertToRupiah(product.price)}
               </p>
-              <button className='btn btn-circle btn-ghost'>
-                <Heart />
-              </button>
+              {isAuthenticated ? (
+                <button className='btn btn-circle btn-ghost'>
+                  <Heart
+                    fill={isProductWishlisted(product.id) ? 'red' : 'none'}
+                  />
+                </button>
+              ) : (
+                <button className='btn btn-circle btn-ghost'>
+                  <Heart />
+                </button>
+              )}
             </div>
             <Link href={`/product/${product.slug}`}>
               <p className='text-justify line-clamp-2'>{product.description}</p>
