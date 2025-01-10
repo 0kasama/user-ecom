@@ -186,9 +186,12 @@ export default function LoginForm() {
         Register
       </button>
 
-      <Link href={'/auth/login'} className='link link-info'>
-        Already have an account?
-      </Link>
+      <p>
+        Already have an account? {''}
+        <Link href={'/auth/login'} className='link link-info'>
+          Login
+        </Link>
+      </p>
 
       {error.message && <Toast message={error.message} type='error' />}
       {success && <Toast message='Register Success' type='success' />}

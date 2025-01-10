@@ -82,9 +82,12 @@ export default function LoginForm() {
         Login
       </button>
 
-      <Link href={'/auth/register'} className='link link-info'>
-        Don't have an account yet?
-      </Link>
+      <p>
+        Don't have an account yet? {''}
+        <Link href={'/auth/register'} className='link link-info'>
+          Sign Up
+        </Link>{' '}
+      </p>
 
       {error && <Toast message='Wrong Email or Password!' type='error' />}
       {success && <Toast message='Login Success!' type='success' />}
