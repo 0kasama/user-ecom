@@ -1,7 +1,11 @@
 'use client';
 
 import { getAllProducts } from '@/lib/api/product';
-import { getAllWishlists } from '@/lib/api/wishlist';
+import {
+  getAllWishlists,
+  addWishlist,
+  removeWishlist,
+} from '@/lib/api/wishlist';
 import { useState, useEffect } from 'react';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
 import { Heart } from 'lucide-react';
@@ -42,6 +46,33 @@ export default function ProductCard() {
     return wishlists.some((wishlist) => wishlist.product.id === productId);
   };
 
+  const getWishlistId = (productId) => {
+    const wishlist = wishlists.find((w) => w.product.id === productId);
+    return wishlist ? wishlist.id : null;
+  };
+
+  const toggleWishlist = async (productId) => {
+    if (!isAuthenticated) return;
+
+    try {
+      if (isProductWishlisted(productId)) {
+        const wishlistId = getWishlistId(productId);
+        if (wishlistId) {
+          await removeWishlist(wishlistId);
+          setWishlists((prevWishlists) =>
+            prevWishlists.filter((wishlist) => wishlist.id !== wishlistId)
+          );
+        }
+      } else {
+        await addWishlist({ product_id: productId });
+        const wishlistsData = await getAllWishlists();
+        setWishlists(wishlistsData.data.data);
+      }
+    } catch (error) {
+      console.error('Error toggling wishlist:', error);
+    }
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -73,7 +104,19 @@ export default function ProductCard() {
                 {convertToRupiah(product.price)}
               </p>
               {isAuthenticated ? (
-                <button className='btn btn-circle btn-ghost'>
+                <button
+                  onClick={() => {
+                    toggleWishlist(product.id);
+                    setWishlists((prevWishlists) =>
+                      isProductWishlisted(product.id)
+                        ? prevWishlists.filter(
+                            (wishlist) => wishlist.product.id !== product.id
+                          )
+                        : [...prevWishlists, { product: { id: product.id } }]
+                    );
+                  }}
+                  className='btn btn-circle btn-ghost'
+                >
                   <Heart
                     fill={isProductWishlisted(product.id) ? 'red' : 'none'}
                   />
