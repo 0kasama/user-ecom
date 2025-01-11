@@ -3,16 +3,34 @@
 import { Menu, CircleUserRound, ShoppingCart, Search } from 'lucide-react';
 import { useAuth } from '@/lib/context/authContext';
 import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { getCart } from '@/lib/api/cart';
 import Link from 'next/link';
 
 export default function Navbar() {
   const router = useRouter();
   const { isAuthenticated, logout } = useAuth();
+  const [cartCount, setCartCount] = useState(0);
 
   const handleLogout = () => {
     logout();
     router.push('/');
   };
+
+  const countCartItems = async () => {
+    try {
+      const cart = await getCart();
+      setCartCount(cart.data.cart_items.length);
+    } catch (error) {
+      console.error('Failed to fetch cart:', error);
+    }
+  };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      countCartItems();
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className='navbar bg-neutral sticky top-0 z-50'>
@@ -58,10 +76,18 @@ export default function Navbar() {
           <Search />
         </button>
         <div className='dropdown dropdown-end'>
-          <Link href={'/cart'} role='button' className='btn btn-ghost btn-circle'>
+          <Link
+            href={'/cart'}
+            role='button'
+            className='btn btn-ghost btn-circle'
+          >
             <div className='indicator'>
               <ShoppingCart />
-              <span className='badge badge-sm indicator-item'>8</span>
+              {cartCount > 0 && (
+                <span className='badge badge-sm indicator-item'>
+                  {cartCount}
+                </span>
+              )}
             </div>
           </Link>
         </div>
