@@ -84,7 +84,7 @@ export default function ProductCard() {
           key={product.id}
           className='card card-compact bg-base-100 w-96 shadow-xl'
         >
-          <Link href={`/product/${product.slug}`}>
+          <Link href={`/products/${product.slug}`}>
             <figure className='relative h-80'>
               <Image
                 src={product.image}
