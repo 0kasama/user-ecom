@@ -9,6 +9,10 @@ module.exports = {
     extend: {
       gridTemplateColumns: {
         '30/70': '30% 70%',
+        '40/60': '40% 60%',
+      },
+      gridTemplateRows: {
+        '20/10/50/20': '20% 10% 50% 20%',
       },
     },
   },

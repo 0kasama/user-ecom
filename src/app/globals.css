@@ -31,3 +31,7 @@ input[type='number']::-webkit-outer-spin-button {
 .select-neutral:focus {
   @apply border-neutral ring ring-neutral ring-offset-2;
 }
+
+.product-detail {
+  @apply flex w-5/6 mx-auto my-20 p-5 justify-center items-center gap-5 bg-base-200 rounded-2xl shadow-xl;
+}
