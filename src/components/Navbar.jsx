@@ -5,21 +5,25 @@ import { useAuth } from '@/lib/context/authContext';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { getCart } from '@/lib/api/cart';
+import { convertToRupiah } from '@/lib/utils/convertRupiah';
+import Image from 'next/image';
 import Link from 'next/link';
 
 export default function Navbar() {
   const router = useRouter();
   const { isAuthenticated, logout } = useAuth();
   const [cartCount, setCartCount] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
 
   const handleLogout = () => {
     logout();
     router.push('/');
   };
 
-  const countCartItems = async () => {
+  const fetchCartItems = async () => {
     try {
       const cart = await getCart();
+      setCartItems(cart.data.cart_items);
       setCartCount(cart.data.cart_items.length);
     } catch (error) {
       console.error('Failed to fetch cart:', error);
@@ -28,7 +32,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      countCartItems();
+      fetchCartItems();
     }
   }, [isAuthenticated]);
 
@@ -75,12 +79,8 @@ export default function Navbar() {
         <button className='btn btn-circle btn-ghost'>
           <Search />
         </button>
-        <div className='dropdown dropdown-end'>
-          <Link
-            href={'/cart'}
-            role='button'
-            className='btn btn-ghost btn-circle'
-          >
+        <Link href={'/cart'} role='button' className='btn btn-ghost btn-circle'>
+          <div className='dropdown dropdown-end dropdown-hover'>
             <div className='indicator'>
               <ShoppingCart />
               {cartCount > 0 && (
@@ -89,8 +89,26 @@ export default function Navbar() {
                 </span>
               )}
             </div>
-          </Link>
-        </div>
+            <ul className='dropdown-content menu bg-base-100 rounded-box z-[1] w-96 h-72 oversroll-auto p-2 shadow'>
+              {cartItems.map((item) => (
+                <li key={item.id}>
+                  <div>
+                    <Image
+                      src={item.product.image}
+                      alt={item.product.name}
+                      width={50}
+                      height={50}
+                    />
+                    <p>{item.product.name}</p>
+                    <p>
+                      {item.quantity} X {convertToRupiah(item.product.price)}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </Link>
         <div className='dropdown dropdown-end'>
           <div tabIndex={0} role='button' className='btn btn-ghost btn-circle'>
             <CircleUserRound size={32} strokeWidth={1.5} />
