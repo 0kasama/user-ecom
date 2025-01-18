@@ -20,3 +20,22 @@ export const getCart = async () => {
     throw error;
   }
 };
+
+export const addToCart = async (params) => {
+  const accessToken = Cookies.get('accessToken');
+  if (!accessToken) {
+    throw error;
+  }
+  try {
+    const response = await axios.post(`${API_URL}/carts`, params, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response;
+  } catch (error) {
+    console.error('Error adding to cart:', error);
+    throw error;
+  }
+};
