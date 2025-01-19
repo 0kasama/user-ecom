@@ -14,10 +14,25 @@ export default function Navbar() {
   const { isAuthenticated, logout } = useAuth();
   const [cartCount, setCartCount] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleLogout = () => {
     logout();
     router.push('/');
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (!searchQuery.trim()) return;
+
+    const modal = document.getElementById('search-modal');
+    if (modal) {
+      modal.close();
+    }
+
+    router.push(`?search=${encodeURIComponent(searchQuery.trim())}`);
+
+    setSearchQuery('');
   };
 
   const fetchCartItems = async () => {
@@ -76,9 +91,34 @@ export default function Navbar() {
         </ul>
       </div>
       <div className='navbar-end'>
-        <button className='btn btn-circle btn-ghost'>
+        <button
+          className='btn btn-circle btn-ghost'
+          onClick={() => document.getElementById('search-modal').showModal()}
+        >
           <Search />
         </button>
+        <dialog id='search-modal' className='modal'>
+          <div className='modal-box'>
+            <h3 className='font-bold text-center text-lg mb-5'>Search</h3>
+            <form onSubmit={handleSearch}>
+              <label className='input input-bordered flex items-center gap-2'>
+                <input
+                  type='text'
+                  className='grow'
+                  placeholder='Search'
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+                <button type='submit'>
+                  <Search />
+                </button>
+              </label>
+            </form>
+          </div>
+          <form method='dialog' className='modal-backdrop'>
+            <button>close</button>
+          </form>
+        </dialog>
         <Link href={'/cart'} role='button' className='btn btn-ghost btn-circle'>
           <div className='dropdown dropdown-end dropdown-hover'>
             <div className='indicator'>

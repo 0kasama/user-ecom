@@ -7,6 +7,7 @@ import {
   removeWishlist,
 } from '@/lib/api/wishlist';
 import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
 import { Heart } from 'lucide-react';
 import LoadingSpinner from './LoadingSpinner';
@@ -16,6 +17,7 @@ import { useAuth } from '@/lib/context/authContext';
 
 export default function ProductCard() {
   const { isAuthenticated } = useAuth();
+  const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [wishlists, setWishlists] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -23,23 +25,25 @@ export default function ProductCard() {
   const fetchData = async () => {
     try {
       setIsLoading(true);
-      const productsData = await getAllProducts();
+      const searchQuery = searchParams.get('search');
+      const params = searchQuery?.trim() ? { search: searchQuery.trim() } : {};
+
+      const productsData = await getAllProducts(params);
       setProducts(productsData.result.data);
 
       if (isAuthenticated) {
         const wishlistsData = await getAllWishlists();
         setWishlists(wishlistsData.data.data);
       }
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching data:', error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     fetchData();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, searchParams]);
 
   const isProductWishlisted = (productId) => {
     if (!isAuthenticated) return false;
@@ -75,6 +79,14 @@ export default function ProductCard() {
 
   if (isLoading) {
     return <LoadingSpinner />;
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className='flex justify-center items-center min-h-[400px]'>
+        <p className='text-lg text-gray-600'>No products found</p>
+      </div>
+    );
   }
 
   return (

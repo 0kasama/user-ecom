@@ -1,9 +1,9 @@
 import { API_URL } from '../utils/apiUrl';
 import axios from 'axios';
 
-export const getAllProducts = async () => {
+export const getAllProducts = async (params) => {
   try {
-    const response = await axios.get(`${API_URL}/products`);
+    const response = await axios.get(`${API_URL}/products`, { params: params });
     return response.data;
   } catch (error) {
     console.error('Error fetching products:', error);
