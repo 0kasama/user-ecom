@@ -19,7 +19,6 @@ export default function ProductDetail({ slug }) {
       const reviewData = await getProductAllReviews({
         product_id: productData.data.id,
       });
-      console.log('reviewData >>>', reviewData.data);
       setReviews(reviewData.data);
       setIsLoading(false);
     } catch (error) {

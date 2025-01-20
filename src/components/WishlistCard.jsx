@@ -10,13 +10,13 @@ import Image from 'next/image';
 
 export default function WishlistCard() {
   const [wishlists, setWishlists] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchWishlists = async () => {
     try {
-      setIsLoading(true);
       const productsData = await getAllWishlists();
       setWishlists(productsData.data.data);
+      setIsLoading(false);
     } catch (error) {
       console.error('Error fetching wishlists:', error);
     }

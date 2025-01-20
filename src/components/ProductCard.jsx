@@ -20,11 +20,10 @@ export default function ProductCard() {
   const searchParams = useSearchParams();
   const [products, setProducts] = useState([]);
   const [wishlists, setWishlists] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchData = async () => {
     try {
-      setIsLoading(true);
       const searchQuery = searchParams.get('search');
       const params = searchQuery?.trim() ? { search: searchQuery.trim() } : {};
 
