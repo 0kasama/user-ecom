@@ -3,7 +3,7 @@ import axios from 'axios';
 
 export const getProductAllReviews = async (params) => {
     try {
-        const response = await axios.get(`${API_URL}/reviews`, params);
+        const response = await axios.get(`${API_URL}/reviews`, {params: params});
         return response;
     } catch (error) {
         console.error('Error fetching product reviews:', error);
