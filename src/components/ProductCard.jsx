@@ -6,6 +6,7 @@ import {
   addWishlist,
   removeWishlist,
 } from '@/lib/api/wishlist';
+import { updateCart } from '@/lib/api/cart';
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { convertToRupiah } from '@/lib/utils/convertRupiah';
@@ -76,6 +77,19 @@ export default function ProductCard() {
     }
   };
 
+  const handleAddToCart = async (productId, productPrice) => {
+    try {
+      const params = {
+        cart_items_attributes: [
+          { product_id: productId, quantity: 1, price: productPrice }
+        ]
+      }
+      await updateCart(params);
+    } catch (error) {
+      console.error('Error adding to cart:', error);
+    }
+  };
+
   if (isLoading) {
     return <LoadingSpinner />;
   }
@@ -143,7 +157,7 @@ export default function ProductCard() {
             </Link>
             <div className='card-actions justify-end'>
               <button className='btn btn-neutral w-32'>Buy Now</button>
-              <button className='btn btn-primary w-32'>Add to Cart</button>
+              <button className='btn btn-primary w-32' onClick={() => handleAddToCart(product.id, product.price)}>Add to Cart</button>
             </div>
           </div>
         </div>
